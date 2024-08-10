@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String?
+  tasks     Task[]    // Relasi satu-ke-banyak dengan Task
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  project_name String
+  tasks        Task[]   // Relasi satu-ke-banyak dengan Task
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  task        String
+  status       Status   @default(OPEN)
+
+  
+  projectId   Int        // Foreign key ke Project
+  project     Project    @relation(fields: [projectId], references: [id]) // Relasi banyak-ke-satu dengan Project
+
+  userId      Int?        // Foreign key ke User
+  user        User?       @relation(fields: [userId], references: [id]) // Relasi banyak-ke-satu dengan User
+
+  subtasks    SubTask[]  // Relasi satu-ke-banyak dengan SubTask
+}
+
+model SubTask {
+  id          Int        @id @default(autoincrement())
+  title       String
+  content     String?
+  status_task StatusTask @default(TODO)
+  taskId      Int?        // Foreign key ke Task
+  task        Task?       @relation(fields: [taskId], references: [id]) // Relasi banyak-ke-satu dengan Task
+}
+
+enum Status {
+  OPEN
+  DONE
+  NEEDREVIEW
+}
+
+enum StatusTask {
+  TODO
+  INPROGRESS
+  PASSED
+  FAILED
+}
