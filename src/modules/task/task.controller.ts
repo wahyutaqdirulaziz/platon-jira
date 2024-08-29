@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, UseInterceptors } from "@nestjs/common";
 import { Status, Task } from "@prisma/client";
-import { ResponseInterceptor } from "src/shared/interceptors/response.interceptor";
+import { ResponseInterceptor } from "../../shared/interceptors/response.interceptor";
 import { TaskService } from "./task.service";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { ApiTags } from "@nestjs/swagger";
